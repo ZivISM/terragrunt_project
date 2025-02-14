@@ -4,6 +4,9 @@ locals {
   project     = "zivoosh-testing-terragrunt"
 }
 
+##################################################
+# REMOTE STATE
+##################################################
 remote_state {
   backend = "s3"
   config = {
@@ -19,12 +22,35 @@ remote_state {
   }
 }
 
+##################################################
+# PROVIDER
+##################################################
 generate "provider" {
   path      = "provider.tf"
   if_exists = "overwrite_terragrunt"
-  contents  = <<EOF
+  contents  = 
+  <<EOF
 provider "aws" {
   region = "us-east-1"
 }
 EOF
 } 
+
+##################################################
+# VERSIONS
+##################################################
+generate "versions" {
+  path      = "versions.tf"
+  if_exists = "overwrite_terragrunt"
+  contents  = 
+  <<EOF
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 4.0"
+    }
+  }
+}
+EOF
+}

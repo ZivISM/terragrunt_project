@@ -3,7 +3,7 @@ include "root" {
 }
 
 terraform {
-  source = "../../../trg-modules/vpc"
+  source = "../../../tf-modules/vpc"
 }
 
 inputs = {
@@ -34,5 +34,6 @@ inputs = {
 
   vpc_tags = {
     status = "Terragrunty"
+    environment = "dev"
   }
 }
