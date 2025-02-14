@@ -1,9 +1,13 @@
+include "root" {
+  path = find_in_parent_folders()
+}
+
 ##################################################
 # LOCALS
 ##################################################
 locals {
-  project     = "my-project"
-  environment = "dev"
+  project     = "zivoosh-testing-terragrunt"
+  environment = "prod"
 }
 
 ##################################################
