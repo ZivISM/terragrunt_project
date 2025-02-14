@@ -1,7 +1,7 @@
 # Root terragrunt.hcl
 locals {
-  environment = path_relative_to_include()
   project     = "zivoosh-testing-terragrunt"
+  environment = path_relative_to_include()
 }
 
 ##################################################

@@ -6,7 +6,6 @@ include "root" {
 # LOCALS
 ##################################################
 locals {
-  project     = "zivoosh-testing-terragrunt"
   environment = "dev"
 }
 
