@@ -6,5 +6,6 @@ terraform {
     region         = "us-east-1"
     encrypt        = true
     dynamodb_table = "zivoosh-testing-terragrunt-dev-terraform-locks"
+    force_destroy  = true
   }
 }

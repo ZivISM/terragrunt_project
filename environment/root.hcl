@@ -33,6 +33,7 @@ terraform {
     region         = "us-east-1"
     encrypt        = true
     dynamodb_table = "${local.project}-${local.environment}-terraform-locks"
+    force_destroy  = true
   }
 }
 EOF
