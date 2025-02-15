@@ -37,5 +37,7 @@ override.tf.json
 terraform.rc
 
 # Ignore terragrunt cache
-.terragrunt-cache/* 
+**/.terragrunt-cache/*
+.terragrunt-cache
+.terraform.lock.hcl
 

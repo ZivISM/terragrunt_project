@@ -2,9 +2,9 @@
 terraform {
   backend "s3" {
     bucket         = "zivoosh-testing-terragrunt-dev-terraform-state"
-    dynamodb_table = "zivoosh-testing-terragrunt-dev-terraform-locks"
-    encrypt        = true
     key            = "dev/vpc/terraform.tfstate"
     region         = "us-east-1"
+    encrypt        = true
+    dynamodb_table = "zivoosh-testing-terragrunt-dev-terraform-locks"
   }
 }
