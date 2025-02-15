@@ -1,6 +1,6 @@
 include "root" {
-  path = find_in_parent_folders()
-}
+  path = find_in_parent_folders("root.hcl")
+} 
 
 terraform {
   source = "../../../tf-modules/vpc"
@@ -10,6 +10,8 @@ inputs = {
   env                = "dev"
   vpc_cidr           = "10.0.0.0/16"
   project            = "Terragrunt-project"
+  region             = "us-east-1"
+  num_zones          = 2
   
   enable_nat_gateway = true
   single_nat_gateway = true
@@ -24,12 +26,7 @@ inputs = {
 
   private_subnet_tags = {
     "kubernetes.io/role/internal-elb" = "1"
-    "${var.karpenter_tag.key}" = "${var.karpenter_tag.value}"
-  }
-  
-  karpenter_tag = {
-    key     = "karpenter.sh/nodepool"
-    value   = "karpenter"
+    "karpenter.sh/discovery" = "karpenter"
   }
 
   vpc_tags = {
