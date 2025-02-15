@@ -36,9 +36,17 @@ override.tf.json
 .terraformrc
 terraform.rc
 
-# Ignore terragrunt cache
+# Terragrunt working directories
 **/.terragrunt-cache/*
-.terragrunt-cache
-.terraform.lock.hcl
 
+# Local Terragrunt state
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+.terraform
 .terragrunt-cache
+
+# Terragrunt debug logs
+terragrunt-debug.tfvars.json
+
+.gitignore
