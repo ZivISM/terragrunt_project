@@ -3,7 +3,7 @@ include "root" {
 } 
 
 terraform {
-  source = "../../../tf-modules/*"
+  source = "../../../tf-modules/cluster"
 }
 
 inputs = { 
@@ -61,8 +61,92 @@ inputs = {
 # KARPENTER
 #######################################################################################
   karpenter_enabled = true
-  karpenter_node_selector = {
+  fargate_additional_profiles = {}
+  karpenter_tag = {
     "karpenter.sh/discovery" = "karpenter"
+  }
+  karpenter_config = {
+    "core" = {
+      tainted    = true    # Marks nodes with a taint to prevent regular workloads from scheduling
+      core       = true    # Identifies this as a core system component provisioner
+      disruption = true    # disruption of these nodes during maintenance
+      arc        = false   # Disables AWS Resource Controller integration
+      amiFamily  = "AL2023" # Uses Amazon Linux 2023 as the node AMI
+      labels = {
+        "nodepool" = "core"
+      }
+      instance_category = {
+        operator = "In"
+        values   = ["t"]  
+      }
+      instance_cpu = {
+        operator = "In"
+        values   = ["4"]  
+      }
+      instance_hypervisor = {
+        operator = "In"
+        values   = ["nitro"]
+      }
+      instance_generation = {
+        operator = "Gt"
+        values   = ["2"]
+      }
+      capacity_type = {
+        operator = "In"
+        values   = ["spot"] # Spot instances / on-demand instances
+      }
+      instance_family = {
+        operator = "In"
+        values   = ["t"]
+        minValues = 1
+      }
+      limits = {
+        cpu               = "10"
+        memory            = "10Gi"
+        ephemeral_storage = "10Gi"
+      }
+    }
+
+    "workers" = {
+      tainted    = false
+      core       = false
+      disruption = true
+      arc        = false
+      amiFamily  = "AL2023"
+      labels = {
+        "nodepool" = "workers"
+      }
+      instance_category = {
+        operator = "In"
+        values   = ["t"]  
+      }
+      instance_cpu = {
+        operator = "In"
+        values   = ["2"]  
+      }
+      instance_hypervisor = {
+        operator = "In"
+        values   = ["nitro"]
+      }
+      instance_generation = {
+        operator = "Gt"
+        values   = ["2"]
+      }
+      capacity_type = {
+        operator = "In"
+        values   = ["spot"]  
+      }
+      instance_family = {
+        operator = "In"
+        values   = ["t"]
+        minValues = 3
+      }
+      limits = {
+        cpu               = "5"
+        memory            = "5Gi"
+        ephemeral_storage = "5Gi"
+      }
+    }    
   }
 
 #######################################################################################
