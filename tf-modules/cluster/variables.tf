@@ -131,33 +131,7 @@ variable "cluster_addons" {
 
 }
 
-variable "enable_aws_load_balancer_controller" {
-  description = "Dictates whether the ALB controller will be installed"
-  type        = bool
 
-}
-
-variable "enable_metrics_server" {
-  description = "Dictates whether the metrics server will be installed"
-  type        = bool
-
-}
-
-variable "enable_kube_prometheus_stack" {
-  description = "Dictates whether the kube prometheus stack will be installed"
-  type        = bool
-}
-
-
-variable "enable_aws_efs_csi_driver" {
-  description = "Dictates whether the EFS CSI Driver will be installed"
-  type        = bool
-}
-
-variable "nginx_controller_service_type" {
-  description = "The service type for the nginx controller"
-  type        = string
-}
 
 ##################################################
 # KARPENTER
@@ -226,10 +200,6 @@ variable "karpenter_config" {
   default = {}
 }
 
-variable "github_repo" {
-  description = "The GitHub repository to use"
-  type        = string
-}
 
 ##################################################
 # BLUEPRINTS

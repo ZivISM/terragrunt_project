@@ -10,13 +10,14 @@ inputs = {
 #######################################################################################
 # GENERAL
 #######################################################################################
-  project            = "Terragrunt-project"
+  project            = "ziv-terragrunt"
   env                = "dev"
   region             = "us-east-1"
   tags               = {
-    "Project" = "Terragrunt-project"
+    "Project" = "ziv-terragrunt"
     "Environment" = "dev"
     "Region" = "us-east-1"
+    "Terragrunt" = "true"
   }
 
 #######################################################################################
@@ -40,7 +41,7 @@ inputs = {
   }
 
   vpc_tags = {
-    status = "Terragrunty"
+    Terragrunt = "true"
     environment = "dev"
   }
 
