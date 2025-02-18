@@ -6,7 +6,7 @@ terraform {
   source = "../../../tf-modules/*"
 }
 
-inputs = {
+inputs = { 
 #######################################################################################
 # GENERAL
 #######################################################################################
@@ -57,13 +57,19 @@ inputs = {
   map_accounts = null
   map_roles = null
 
-  cluster_addons = {
-    "coredns" = {
-      "enabled" = true
-    }
-    "kube-proxy" = {
-      "enabled" = true
-    }
-    "vpc-cni" = {
-      "enabled" = true
+#######################################################################################
+# KARPENTER
+#######################################################################################
+  karpenter_enabled = true
+  karpenter_node_selector = {
+    "karpenter.sh/discovery" = "karpenter"
+  }
+
+#######################################################################################
+# BLUEPRINTS
+#######################################################################################
+  enable_aws_load_balancer_controller = true
+  enable_metrics_server = true
+  enable_kube_prometheus_stack = true
+  enable_aws_efs_csi_driver = true
 }
