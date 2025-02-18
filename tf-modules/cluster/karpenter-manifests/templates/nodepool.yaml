@@ -1,0 +1,50 @@
+apiVersion: karpenter.sh/v1
+kind: NodePool
+metadata:
+    name: "{{ .Release.Name }}"
+spec:
+  {{- if .Values.nodePool.disruption }}
+  disruption:
+      consolidateAfter: 1m0s
+      consolidationPolicy: WhenEmptyOrUnderutilized
+  {{- end }}
+  template:
+    metadata:
+      labels:
+        {{- if .Values.nodePool.labels }}
+        {{- toYaml .Values.nodePool.labels | nindent 8 }}
+        {{- end }}
+    spec:
+        nodeClassRef:
+            group: karpenter.k8s.aws
+            kind: EC2NodeClass
+            name: "{{ .Release.Name }}-ec2nc"
+        {{- if .Values.nodePool.tainted }}
+        taints:
+        - key: {{ .Release.Name }}
+          effect: NoSchedule
+        {{- end }}
+        requirements:
+        - key: "karpenter.k8s.aws/instance-category"
+          operator: {{ .Values.nodePool.instance_category.operator }}
+          values: {{ .Values.nodePool.instance_category.values | toJson }}
+        - key: "karpenter.k8s.aws/instance-cpu"
+          operator: {{ .Values.nodePool.instance_cpu.operator }}
+          values: {{ .Values.nodePool.instance_cpu.values | toJson }}
+        - key: "karpenter.k8s.aws/instance-hypervisor"
+          operator: {{ .Values.nodePool.instance_hypervisor.operator }}
+          values: {{ .Values.nodePool.instance_hypervisor.values | toJson }}
+        - key: "karpenter.k8s.aws/instance-generation"
+          operator: {{ .Values.nodePool.instance_generation.operator }}
+          values: {{ .Values.nodePool.instance_generation.values | toJson }}
+        - key: "karpenter.sh/capacity-type"
+          operator: {{ .Values.nodePool.capacity_type.operator }}
+          values: {{ .Values.nodePool.capacity_type.values | toJson }}
+        - key: "kubernetes.io/arch"
+          operator: In
+          values: ["amd64"]
+         
+
+    limits:
+        cpu: {{ .Values.nodePool.cpu }}
+        memory: {{ .Values.nodePool.memory }}

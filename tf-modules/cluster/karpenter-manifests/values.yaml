@@ -1,0 +1,33 @@
+ec2nc:
+  karpenter_role: "Karpenter-project-develop-cluster"
+  amiFamily: "AL2"
+  karpenter_tag: "karpenter.sh/discovery"
+  karpenter_value: "develop"
+  ephemeral_storage: "240Gi"
+
+nodePool:
+  instance_category: 
+    operator: In
+    values: ["t"]
+  instance_cpu: 
+    operator: In
+    values: ["2","4"]
+  instance_hypervisor: 
+    operator: In
+    values: ["nitro"]
+  instance_generation: 
+    operator: Gt
+    values: ["2"]
+  capacity_type: 
+    operator: In
+    values: ["spot","on-demand"]
+  
+  instance_family: 
+    operator: In
+    values: ["t1","t2","t3"]
+  
+  cpu: "1000"
+  memory: "1000Gi"
+
+  labels: []
+      
