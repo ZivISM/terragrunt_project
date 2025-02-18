@@ -6,6 +6,51 @@ terraform {
   source = "../../../tf-modules/cluster"
 }
 
+#############################################################
+# KUBERNETES PROVIDERS
+#############################################################
+generate "kubernetes_providers" {
+  path      = "kubernetes_providers.tf"
+  if_exists = "overwrite_terragrunt"
+  contents  = <<EOF
+provider "kubernetes" {
+  host                   = module.eks.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+  exec {
+    api_version = "client.authentication.k8s.io/v1beta1"
+    args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
+    command     = "aws"
+  }
+}
+
+provider "kubectl" {
+  apply_retry_count      = 5
+  host                   = module.eks.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+  load_config_file       = false
+
+  exec {
+    api_version = "client.authentication.k8s.io/v1"
+    command     = "aws"
+    args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
+  }
+}
+
+provider "helm" {
+  kubernetes {
+    host                   = module.eks.cluster_endpoint
+    cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+    exec {
+      api_version = "client.authentication.k8s.io/v1beta1"
+      args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
+      command     = "aws"
+    }
+  }
+}
+EOF
+}
+
+
 inputs = { 
 #######################################################################################
 # GENERAL
@@ -30,6 +75,7 @@ inputs = {
   one_nat_gateway_per_az = false 
   enable_dns_hostnames = true
   enable_dns_support = true
+  domain_name = "ziv-terragrunt.testing"
 
   public_subnet_tags = {
     "kubernetes.io/role/elb" = "1"
@@ -54,9 +100,21 @@ inputs = {
 
   eks_managed_node_groups = null
 
-  map_users = null
-  map_accounts = null
-  map_roles = null
+  map_users = [
+    {
+      userarn  = "arn:aws:iam::123456789012:user/localadmin"
+      username = "localadmin"
+      groups   = ["system:masters"]
+    }
+  ]
+  map_accounts = ["123456789012"] # Main AWS account ID
+  map_roles = [
+    {
+      rolearn  = "arn:aws:iam::123456789012:role/eks-admin"
+      username = "eks-admin" 
+      groups   = ["system:masters"]
+    }
+  ]
 
 #######################################################################################
 # KARPENTER
@@ -64,7 +122,8 @@ inputs = {
   karpenter_enabled = true
   fargate_additional_profiles = {}
   karpenter_tag = {
-    "karpenter.sh/discovery" = "karpenter"
+    key   = "karpenter.sh/discovery"
+    value = "karpenter"
   }
   karpenter_config = {
     "core" = {
@@ -158,3 +217,5 @@ inputs = {
   enable_kube_prometheus_stack = true
   enable_aws_efs_csi_driver = true
 }
+
+
