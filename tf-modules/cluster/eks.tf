@@ -5,7 +5,7 @@ module "eks" {
   source                                   = "terraform-aws-modules/eks/aws"
   create                                   = var.eks_enabled
   version                                  = "20.8.4"
-  cluster_name                             = "${var.project}-${var.env}-cluster"
+  cluster_name                             = "${var.project}-${var.env}"
   cluster_version                          = var.k8s_version
   cluster_endpoint_private_access          = true
   cluster_endpoint_public_access           = true
